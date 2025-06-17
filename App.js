@@ -43,6 +43,9 @@ import FreeBoardDetailPage from "./src/Screens/Pages/FreeBoardDetailPage";
 import FindId from "./src/Screens/Pages/FindId";
 import FindPw from "./src/Screens/Pages/FindPw";
 import NoticePage from "./src/Screens/Pages/NoticePage";
+import ChangePw from "./src/Screens/Pages/ChangePw";
+import MyInfo from "./src/Screens/Pages/MyInfo";
+import MyPost from "./src/Screens/Pages/MyPost";
 
 const Stack = createNativeStackNavigator();
 
@@ -90,6 +93,25 @@ export default function App() {
                 component={FindPw}
                 options={{ headerShown: false }}
               />
+
+              <Stack.Screen
+                name="ChangePw"
+                component={ChangePw}
+                options={{ headerShown: false }}
+              />
+
+              <Stack.Screen
+                name="MyInfo"
+                component={MyInfo}
+                options={{ headerShown: false }}
+              />
+
+              <Stack.Screen
+                name="MyPost"
+                component={MyPost}
+                options={{ headerShown: false }}
+              />
+
               <Stack.Screen
                 name="GuestScreen"
                 component={GuestScreen}

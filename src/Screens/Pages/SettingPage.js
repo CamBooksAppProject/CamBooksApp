@@ -71,7 +71,10 @@ export default function SettingPage() {
             >
               <Text style={styles.menuFont}>내 정보</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.noneLineBox}>
+            <TouchableOpacity
+              style={styles.noneLineBox}
+              onPress={() => navigation.navigate("ChangePw")}
+            >
               <Text style={styles.menuFont}>비밀번호 변경</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.noneLineBox}>
