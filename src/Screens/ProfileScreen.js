@@ -75,14 +75,17 @@ export default function ProfileScreen() {
               />
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.backButton}>
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={() => navigation.navigate("NoticePage")}
+            >
               <MaterialIcons
                 name="help-outline"
                 size={26}
                 color="#333"
                 style={styles.setImg}
               />
-              <Text style={styles.menuFont}>문의하기</Text>
+              <Text style={styles.menuFont}>자주묻는 질문</Text>
               <MaterialIcons
                 name="chevron-right"
                 size={24}

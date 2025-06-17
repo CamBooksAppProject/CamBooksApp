@@ -103,130 +103,125 @@ export default function SignUpScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView
-        contentContainerStyle={styles.scrollContainer}
-        contentInsetAdjustmentBehavior="automatic"
-      >
-        <View style={styles.container}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => navigation.goBack()}
-          >
-            <Ionicons name="chevron-back" size={28} color="#333" />
-          </TouchableOpacity>
+      <View style={styles.container}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Ionicons name="chevron-back" size={28} color="#333" />
+        </TouchableOpacity>
 
-          <View style={styles.titleContainer}>
-            <Text style={styles.title}>최고의 거래를 할</Text>
-            <Text style={styles.title}>준비가 되셨나요?</Text>
-          </View>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>최고의 거래를 할</Text>
+          <Text style={styles.title}>준비가 되셨나요?</Text>
+        </View>
 
-          <View style={styles.inputContainer}>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="이름을 입력해주세요."
+            value={name}
+            onChangeText={setName}
+          />
+          {nameErrorMessage !== "" && (
+            <Text style={styles.errorText}>{nameErrorMessage}</Text>
+          )}
+
+          <View style={styles.idRow}>
             <TextInput
-              style={styles.input}
-              placeholder="이름을 입력해주세요."
-              value={name}
-              onChangeText={setName}
-            />
-            {nameErrorMessage !== "" && (
-              <Text style={styles.errorText}>{nameErrorMessage}</Text>
-            )}
-
-            <View style={styles.idRow}>
-              <TextInput
-                style={styles.idInput}
-                placeholder="아이디를 입력해주세요."
-                value={userId}
-                onChangeText={(text) => {
-                  setUserId(text);
-                  setIdChecked(false);
-                  setIdCheckMessage("");
-                }}
-              />
-              <TouchableOpacity
-                style={[styles.checkButton, idChecked && styles.disabledButton]}
-                onPress={checkIdDuplicate}
-                disabled={idChecked}
-              >
-                <Text style={styles.btnfont}>
-                  {idChecked ? "확인 완료" : "중복 확인"}
-                </Text>
-              </TouchableOpacity>
-            </View>
-
-            {idCheckMessage !== "" && (
-              <Text style={styles.errorText}>{idCheckMessage}</Text>
-            )}
-
-            {/* 비밀번호 입력 */}
-            <View style={styles.passwordRow}>
-              <TextInput
-                style={styles.passwordInput}
-                placeholder="비밀번호를 입력해주세요."
-                secureTextEntry={!showPassword}
-                value={password}
-                onChangeText={setPassword}
-              />
-              <TouchableOpacity
-                onPress={() => setShowPassword(!showPassword)}
-                style={styles.eyeIcon}
-              >
-                <Ionicons
-                  name={showPassword ? "eye-off" : "eye"}
-                  size={20}
-                  color="#888"
-                />
-              </TouchableOpacity>
-            </View>
-            {passwordValidMessage !== "" && (
-              <Text style={styles.errorText}>{passwordValidMessage}</Text>
-            )}
-
-            <View style={styles.passwordRow}>
-              <TextInput
-                style={styles.passwordInput}
-                placeholder="비밀번호를 다시 입력해주세요."
-                secureTextEntry={!showConfirmPassword}
-                value={confirmPassword}
-                onChangeText={handleConfirmPasswordChange}
-              />
-              <TouchableOpacity
-                onPress={() => setShowConfirmPassword(!showConfirmPassword)}
-                style={styles.eyeIcon}
-              >
-                <Ionicons
-                  name={showConfirmPassword ? "eye-off" : "eye"}
-                  size={20}
-                  color="#888"
-                />
-              </TouchableOpacity>
-            </View>
-            {passwordMatchMessage !== "" && (
-              <Text
-                style={
-                  passwordMatchMessage.includes("일치하지")
-                    ? styles.errorText
-                    : styles.successText
-                }
-              >
-                {passwordMatchMessage}
-              </Text>
-            )}
-          </View>
-
-          {/* 다음 버튼 */}
-          <View style={styles.bottomContainer}>
-            <TouchableOpacity
-              style={[styles.mainButton, !canProceed && styles.disabledButton]}
-              onPress={() => {
-                if (canProceed) navigation.navigate("AuthenticationScreen");
+              style={styles.idInput}
+              placeholder="아이디를 입력해주세요."
+              value={userId}
+              onChangeText={(text) => {
+                setUserId(text);
+                setIdChecked(false);
+                setIdCheckMessage("");
               }}
-              disabled={!canProceed}
+            />
+            <TouchableOpacity
+              style={[styles.checkButton, idChecked && styles.disabledButton]}
+              onPress={checkIdDuplicate}
+              disabled={idChecked}
             >
-              <Text style={styles.btnfont}>다음</Text>
+              <Text style={styles.btnfont}>
+                {idChecked ? "확인 완료" : "중복 확인"}
+              </Text>
             </TouchableOpacity>
           </View>
+
+          {idCheckMessage !== "" && (
+            <Text style={styles.errorText}>{idCheckMessage}</Text>
+          )}
+
+          {/* 비밀번호 입력 */}
+          <View style={styles.passwordRow}>
+            <TextInput
+              style={styles.passwordInput}
+              placeholder="비밀번호를 입력해주세요."
+              secureTextEntry={!showPassword}
+              value={password}
+              onChangeText={setPassword}
+            />
+            <TouchableOpacity
+              onPress={() => setShowPassword(!showPassword)}
+              style={styles.eyeIcon}
+            >
+              <Ionicons
+                name={showPassword ? "eye-off" : "eye"}
+                size={20}
+                color="#888"
+              />
+            </TouchableOpacity>
+          </View>
+          {passwordValidMessage !== "" && (
+            <Text style={styles.errorText}>{passwordValidMessage}</Text>
+          )}
+
+          <View style={styles.passwordRow}>
+            <TextInput
+              style={styles.passwordInput}
+              placeholder="비밀번호를 다시 입력해주세요."
+              secureTextEntry={!showConfirmPassword}
+              value={confirmPassword}
+              onChangeText={handleConfirmPasswordChange}
+            />
+            <TouchableOpacity
+              onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+              style={styles.eyeIcon}
+            >
+              <Ionicons
+                name={showConfirmPassword ? "eye-off" : "eye"}
+                size={20}
+                color="#888"
+              />
+            </TouchableOpacity>
+          </View>
+          {passwordMatchMessage !== "" && (
+            <Text
+              style={
+                passwordMatchMessage.includes("일치하지")
+                  ? styles.errorText
+                  : styles.successText
+              }
+            >
+              {passwordMatchMessage}
+            </Text>
+          )}
         </View>
-      </ScrollView>
+
+        {/* 다음 버튼 */}
+        <View style={styles.bottomContainer}>
+          <TouchableOpacity
+            style={[styles.mainButton, !canProceed && styles.disabledButton]}
+            onPress={() => {
+              if (canProceed) navigation.navigate("AuthenticationScreen");
+            }}
+            disabled={!canProceed}
+          >
+            <Text style={styles.btnfont}>다음</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
       <StatusBar style="auto" />
     </SafeAreaView>
   );
