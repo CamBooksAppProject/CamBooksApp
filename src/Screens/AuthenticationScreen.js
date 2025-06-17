@@ -5,168 +5,273 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  Image,
   SafeAreaView,
   ScrollView,
   Alert,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native"; // useNavigation 훅 추가
-
-import IMAGES from "../../assets";
-
-import { useState } from "react"; // useState 훅 추가
+import { useNavigation } from "@react-navigation/native";
+import { useState } from "react";
+import { Ionicons } from "@expo/vector-icons"; // Ionicons import
 
 export default function AuthenticationScreen() {
-  const navigation = useNavigation(); // useNavigation 훅으로 navigation 객체 가져오기
-  const [inputCode, setInputCode] = useState(""); // 인증번호 입력 상태 관리
-  const correctCode = "123456"; // 하드코딩된 올바른 인증번호
+  const navigation = useNavigation();
+  const [schoolName, setSchoolName] = useState(""); // 학교 이름
+  const [email, setEmail] = useState("");
+  const [inputCode, setInputCode] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [sentCode, setSentCode] = useState("");
+  const [isCodeConfirmed, setIsCodeConfirmed] = useState(false); // 인증번호 확인 여부
 
-  // 확인 버튼 클릭 핸들러
-  const handleConfirm = () => {
-    if (inputCode === correctCode) {
-      Alert.alert("", "인증번호가 확인되었습니다.", [
-        { text: "확인", onPress: () => navigation.navigate("LoginScreen") },
-      ]);
-    } else {
-      Alert.alert("", "인증번호가 다릅니다.", [
-        { text: "확인", onPress: () => console.log("인증번호 틀림") },
-      ]);
+  const correctCode = "123456";
+
+  // 이메일 '@' 포함 및 '.ac.kr' 끝 검사 함수
+  const isValidEmail = (email) => {
+    const trimmed = email.trim();
+    return trimmed.includes("@") && trimmed.endsWith(".ac.kr");
+  };
+
+  // 인증번호 전송 함수
+  const handleSendCode = () => {
+    if (!email.includes("@")) {
+      setErrorMessage("이메일에 '@'를 포함해야 합니다.");
+      setSentCode("");
+      return;
     }
+    if (!email.trim().endsWith(".ac.kr")) {
+      setErrorMessage("학교 이메일은 '.ac.kr'로 끝나야 합니다.");
+      setSentCode("");
+      return;
+    }
+    setErrorMessage("");
+    setSentCode(correctCode);
+    setIsCodeConfirmed(false);
+    Alert.alert("", "인증번호가 전송되었습니다.");
+  };
+
+  const handleConfirm = () => {
+    if (inputCode !== correctCode) {
+      setErrorMessage("인증번호가 다릅니다.");
+      setIsCodeConfirmed(false);
+      return;
+    }
+    setErrorMessage("");
+    setIsCodeConfirmed(true);
+  };
+
+  const handleCompleteSignup = () => {
+    Alert.alert("회원가입 완료", "회원가입이 완료되었습니다.", [
+      {
+        text: "확인",
+        onPress: () => navigation.navigate("LoginScreen"),
+      },
+    ]);
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
-      <SafeAreaView style={styles.container}>
-        <TouchableOpacity
-          style={styles.topContainer}
-          onPress={() => navigation.goBack()} // 뒤로가기 네비게이션
-        >
-          <Image
-            source={IMAGES.BACK}
-            style={styles.backImg}
-          />
-        </TouchableOpacity>
-
-        <View style={styles.textContainer}>
-          <Text style={styles.mainFont}>학교 이메일 인증이</Text>
-          <Text style={styles.mainFont}>필요해요.</Text>
-        </View>
-
-        <View style={styles.InputContainer}>
-          <TextInput
-            style={styles.input}
-            placeholder="학교이메일을 입력해주세요."
-          />
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        contentInsetAdjustmentBehavior="automatic"
+      >
+        <View style={styles.container}>
           <TouchableOpacity
-            style={styles.mainbtn}
-            onPress={() => navigation.navigate("AuthenticationScreen")}
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
           >
-            <Text style={styles.btnfont}>인증번호 전송</Text>
+            <Ionicons name="chevron-back" size={28} color="#333" />
           </TouchableOpacity>
 
-          <View style={styles.ckContainer}>
+          <View style={styles.textContainer}>
+            <Text style={styles.title}>학교 이메일 인증이</Text>
+            <Text style={styles.title}>필요해요.</Text>
+          </View>
+
+          <View style={styles.InputContainer}>
+            {/* 학교 이름 입력 */}
             <TextInput
-              style={styles.ckInput}
-              placeholder="인증번호를 입력해주세요."
-              value={inputCode}
-              onChangeText={setInputCode} // 입력된 텍스트 상태 업데이트
+              style={styles.schoolInput}
+              placeholder="학교 이름을 입력해주세요."
+              value={schoolName}
+              onChangeText={(text) => setSchoolName(text)}
+              autoCapitalize="words"
             />
-            <TouchableOpacity style={styles.smallbtn} onPress={handleConfirm}>
-              <Text style={styles.btnfont}>확인</Text>
+
+            {/* 이메일 입력 */}
+            <TextInput
+              style={styles.input}
+              placeholder="학교이메일을 입력해주세요."
+              value={email}
+              onChangeText={(text) => {
+                setEmail(text);
+                setErrorMessage("");
+                setSentCode("");
+                setIsCodeConfirmed(false);
+              }}
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
+
+            {errorMessage !== "" && (
+              <Text style={styles.errorText}>{errorMessage}</Text>
+            )}
+
+            {/* 인증번호 전송 버튼 (원래 크기) */}
+            <TouchableOpacity style={styles.mainbtn} onPress={handleSendCode}>
+              <Text style={styles.btnfont}>인증번호 전송</Text>
+            </TouchableOpacity>
+
+            {sentCode !== "" && (
+              <Text style={styles.sentCodeText}>
+                테스트용 인증번호: {sentCode}
+              </Text>
+            )}
+
+            {/* 인증번호 입력 및 확인 버튼 */}
+            <View style={styles.ckContainer}>
+              <TextInput
+                style={styles.ckInput}
+                placeholder="인증번호를 입력해주세요."
+                value={inputCode}
+                onChangeText={(text) => {
+                  setInputCode(text);
+                  setErrorMessage("");
+                  setIsCodeConfirmed(false);
+                }}
+                keyboardType="number-pad"
+              />
+              <TouchableOpacity
+                style={[
+                  styles.smallbtn,
+                  inputCode.length === 6
+                    ? { backgroundColor: "#67574D" }
+                    : { backgroundColor: "#BEBEBE" },
+                ]}
+                onPress={handleConfirm}
+                disabled={inputCode.length !== 6}
+              >
+                <Text style={styles.btnfont}>확인</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* 회원가입 완료 버튼: 인증번호가 맞아야 활성화 */}
+            <TouchableOpacity
+              style={[
+                styles.completeBtn,
+                isCodeConfirmed && email && schoolName
+                  ? { backgroundColor: "#67574D" }
+                  : { backgroundColor: "#BEBEBE" },
+              ]}
+              onPress={handleCompleteSignup}
+              disabled={!isCodeConfirmed || !email || !schoolName}
+            >
+              <Text style={styles.btnfont}>회원가입 완료</Text>
             </TouchableOpacity>
           </View>
         </View>
-
-        <StatusBar style="auto" />
-      </SafeAreaView>
-    </ScrollView>
+      </ScrollView>
+      <StatusBar style="auto" />
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
   scrollContainer: {
-    flexGrow: 1, // ScrollView가 화면 전체를 차지하게 설정
+    flexGrow: 1,
+    backgroundColor: "#fff",
   },
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    alignItems: "center",
+    paddingHorizontal: 24,
+    paddingTop: 40,
+    paddingBottom: 40,
   },
-  topContainer: {
-    width: "100%",
-    height: "15%",
-    paddingTop: 70,
-    paddingLeft: 25,
-    justifyContent: "center", // 수직 가운데 정렬
+  backButton: {
+    marginBottom: 20,
   },
   textContainer: {
-    width: "100%",
-    height: "20%",
-    paddingHorizontal: 40,
-    paddingTop: 10,
-    marginTop: 50,
+    marginTop: 40,
+    marginBottom: 80,
+  },
+  title: {
+    fontSize: 25,
+    fontWeight: "bold",
+    color: "#000",
   },
   InputContainer: {
     width: "100%",
-    height: "40%",
-    alignItems: "center",
-    justifyContent: "center",
   },
-  ckContainer: {
+  schoolInput: {
+    backgroundColor: "#F7F7F7",
     width: "100%",
-    flexDirection: "row", // 수평 정렬
-    alignItems: "center", // 수직 가운데 정렬
-    justifyContent: "center", // 가운데 정렬
-    marginVertical: 40, // 위아래 여백 추가
-  },
-  backImg: {
-    height: 46,
-    width: 46,
-  },
-  mainFont: {
-    fontSize: 25,
-    fontWeight: "900",
-    textAlign: "left",
+    height: 48,
+    marginBottom: 12,
+    paddingHorizontal: 16,
+    borderRadius: 5,
   },
   input: {
     backgroundColor: "#F7F7F7",
-    width: "80%",
-    height: 45,
-    marginVertical: 5,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    width: "100%",
+    height: 48,
+    marginVertical: 8,
+    paddingHorizontal: 16,
     borderRadius: 5,
+  },
+  ckContainer: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 40,
   },
   ckInput: {
     backgroundColor: "#F7F7F7",
-    width: "56%",
-    height: 45,
-    marginVertical: 5,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    flex: 1,
+    height: 48,
+    paddingHorizontal: 16,
     borderRadius: 5,
   },
   mainbtn: {
     backgroundColor: "#67574D",
-    width: "80%",
+    width: "100%",
     marginVertical: 15,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
+    paddingVertical: 14,
     borderRadius: 5,
     alignItems: "center",
   },
   smallbtn: {
-    backgroundColor: "#67574D",
     marginLeft: 10,
-    paddingVertical: 13.5,
-    paddingHorizontal: 31,
+    paddingVertical: 14,
+    paddingHorizontal: 28,
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
   },
   btnfont: {
-    color: "#ffffff",
+    color: "#fff",
     fontWeight: "bold",
     fontSize: 14,
+  },
+  errorText: {
+    color: "red",
+    fontSize: 12,
+    marginTop: 8,
+    marginLeft: 4,
+  },
+  sentCodeText: {
+    marginTop: 5,
+    fontSize: 13,
+    color: "#333",
+    textAlign: "center",
+  },
+  completeBtn: {
+    width: "100%",
+    paddingVertical: 14,
+    borderRadius: 5,
+    alignItems: "center",
+    marginTop: 30,
   },
 });
