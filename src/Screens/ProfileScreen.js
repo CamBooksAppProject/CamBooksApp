@@ -27,7 +27,10 @@ export default function ProfileScreen() {
 
         <View style={styles.menuContainer}>
           <View style={styles.menuBox}>
-            <TouchableOpacity style={styles.backButton}>
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={() => navigation.navigate("MyPost")}
+            >
               <MaterialIcons
                 name="settings"
                 size={26}
