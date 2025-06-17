@@ -40,6 +40,9 @@ import SettingModal from "./src/Screens/Pages/SettingModal";
 import HomeDetailPage from "./src/Screens/Pages/HomeDetailPage";
 import CommuDetailPage from "./src/Screens/Pages/CommuDetailPage";
 import FreeBoardDetailPage from "./src/Screens/Pages/FreeBoardDetailPage";
+import FindId from "./src/Screens/Pages/FindId";
+import FindPw from "./src/Screens/Pages/FindPw";
+import NoticePage from "./src/Screens/Pages/NoticePage";
 
 const Stack = createNativeStackNavigator();
 
@@ -76,7 +79,17 @@ export default function App() {
                 component={AuthenticationScreen}
                 options={{ headerShown: false }}
               />
+              <Stack.Screen
+                name="FindId"
+                component={FindId}
+                options={{ headerShown: false }}
+              />
 
+              <Stack.Screen
+                name="FindPw"
+                component={FindPw}
+                options={{ headerShown: false }}
+              />
               <Stack.Screen
                 name="GuestScreen"
                 component={GuestScreen}
@@ -90,10 +103,17 @@ export default function App() {
               />
 
               <Stack.Screen
+                name="NoticePage"
+                component={NoticePage}
+                options={{ headerShown: false }}
+              />
+
+              <Stack.Screen
                 name="RouteScreen"
                 component={RouteScreen}
                 options={{ headerShown: false }}
               />
+
               <Stack.Screen
                 name="HomeScreen"
                 component={HomeScreen}

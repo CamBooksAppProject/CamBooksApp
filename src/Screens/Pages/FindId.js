@@ -6,39 +6,31 @@ import {
   TouchableOpacity,
   View,
   SafeAreaView,
-  ScrollView,
   Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
-import { Ionicons } from "@expo/vector-icons"; // Ionicons import
+import { Ionicons } from "@expo/vector-icons";
 
-export default function AuthenticationScreen() {
+export default function FindId() {
   const navigation = useNavigation();
-  const [schoolName, setSchoolName] = useState(""); // 학교 이름
+  const [schoolName, setSchoolName] = useState("");
   const [email, setEmail] = useState("");
   const [inputCode, setInputCode] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [sentCode, setSentCode] = useState("");
-  const [isCodeConfirmed, setIsCodeConfirmed] = useState(false); // 인증번호 확인 여부
+  const [isCodeConfirmed, setIsCodeConfirmed] = useState(false);
 
   const correctCode = "123456";
 
-  // 이메일 '@' 포함 및 '.ac.kr' 끝 검사 함수
   const isValidEmail = (email) => {
     const trimmed = email.trim();
     return trimmed.includes("@") && trimmed.endsWith(".ac.kr");
   };
 
-  // 인증번호 전송 함수
   const handleSendCode = () => {
-    if (!email.includes("@")) {
-      setErrorMessage("이메일에 '@'를 포함해야 합니다.");
-      setSentCode("");
-      return;
-    }
-    if (!email.trim().endsWith(".ac.kr")) {
-      setErrorMessage("학교 이메일은 '.ac.kr'로 끝나야 합니다.");
+    if (!isValidEmail(email)) {
+      setErrorMessage("학교 이메일은 '@'를 포함하고 '.ac.kr'로 끝나야 합니다.");
       setSentCode("");
       return;
     }
@@ -59,7 +51,7 @@ export default function AuthenticationScreen() {
   };
 
   const handleCompleteSignup = () => {
-    Alert.alert("회원가입 완료", "회원가입이 완료되었습니다.", [
+    Alert.alert("아이디 찾기 완료", "아이디찾기가 완료되었습니다.", [
       {
         text: "확인",
         onPress: () => navigation.navigate("LoginScreen"),
@@ -78,12 +70,10 @@ export default function AuthenticationScreen() {
         </TouchableOpacity>
 
         <View style={styles.textContainer}>
-          <Text style={styles.title}>학교 이메일 인증이</Text>
-          <Text style={styles.title}>필요해요.</Text>
+          <Text style={styles.title}>아이디 찾기</Text>
         </View>
 
         <View style={styles.InputContainer}>
-          {/* 학교 이름 입력 */}
           <TextInput
             style={styles.schoolInput}
             placeholder="학교 이름을 입력해주세요."
@@ -92,7 +82,6 @@ export default function AuthenticationScreen() {
             autoCapitalize="words"
           />
 
-          {/* 이메일 입력 */}
           <TextInput
             style={styles.input}
             placeholder="학교이메일을 입력해주세요."
@@ -111,7 +100,6 @@ export default function AuthenticationScreen() {
             <Text style={styles.errorText}>{errorMessage}</Text>
           )}
 
-          {/* 인증번호 전송 버튼 (원래 크기) */}
           <TouchableOpacity style={styles.mainbtn} onPress={handleSendCode}>
             <Text style={styles.btnfont}>인증번호 전송</Text>
           </TouchableOpacity>
@@ -122,7 +110,6 @@ export default function AuthenticationScreen() {
             </Text>
           )}
 
-          {/* 인증번호 입력 및 확인 버튼 */}
           <View style={styles.ckContainer}>
             <TextInput
               style={styles.ckInput}
@@ -149,7 +136,6 @@ export default function AuthenticationScreen() {
             </TouchableOpacity>
           </View>
 
-          {/* 회원가입 완료 버튼: 인증번호가 맞아야 활성화 */}
           <TouchableOpacity
             style={[
               styles.completeBtn,
@@ -160,7 +146,7 @@ export default function AuthenticationScreen() {
             onPress={handleCompleteSignup}
             disabled={!isCodeConfirmed || !email || !schoolName}
           >
-            <Text style={styles.btnfont}>회원가입 완료</Text>
+            <Text style={styles.btnfont}>아이디 찾기</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -172,10 +158,6 @@ export default function AuthenticationScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#fff",
-  },
-  scrollContainer: {
-    flexGrow: 1,
     backgroundColor: "#fff",
   },
   container: {
